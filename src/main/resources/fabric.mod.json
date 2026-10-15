@@ -3,7 +3,7 @@
   "id": "debug",
   "version": "${version}",
   "name": "Debug",
-  "description": "Anti Vanish for Meteor Client. Ported from the Anubis client (GPL-3.0).",
+  "description": "Anti Vanish + Staff List for Meteor Client. Ported from the Anubis client (GPL-3.0).",
   "authors": ["debug"],
   "contributors": ["4ldenz (original Anubis Anti Vanish code)"],
   "contact": {},

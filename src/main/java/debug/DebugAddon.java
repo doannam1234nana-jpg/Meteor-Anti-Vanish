@@ -1,7 +1,9 @@
 package debug;
 
 import debug.hud.AntiVanishHud;
+import debug.hud.StaffListHud;
 import debug.modules.AntiVanish;
+import debug.modules.StaffList;
 import meteordevelopment.meteorclient.addons.MeteorAddon;
 import meteordevelopment.meteorclient.systems.hud.Hud;
 import meteordevelopment.meteorclient.systems.hud.HudGroup;
@@ -17,9 +19,11 @@ public class DebugAddon extends MeteorAddon {
 
     @Override
     public void onInitialize() {
-        LOG.info("Debug addon (Anti Vanish) loading");
+        LOG.info("Debug addon (Anti Vanish + Staff List) loading");
         Modules.get().add(new AntiVanish());
+        Modules.get().add(new StaffList());
         Hud.get().register(AntiVanishHud.INFO);
+        Hud.get().register(StaffListHud.INFO);
     }
 
     @Override

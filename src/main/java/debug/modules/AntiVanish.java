@@ -11,6 +11,7 @@ import com.mojang.brigadier.suggestion.Suggestion;
 import debug.DebugAddon;
 import debug.util.DonutStaff;
 import debug.util.VanishText;
+import debug.util.WatchAlert;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -131,6 +132,9 @@ public class AntiVanish extends Module {
         .defaultValue(35).min(10).sliderRange(10, 100).visible(criticalEnabled::get).build());
     private final Setting<Boolean> chime = sgCritical.add(new BoolSetting.Builder()
         .name("chime").description("Play a sound on CRITICAL.").defaultValue(true).visible(criticalEnabled::get).build());
+    private final Setting<Boolean> titleAlert = sgCritical.add(new BoolSetting.Builder()
+        .name("title-alert").description("Show the big red WATCHING YOU title on CRITICAL (like Anubis).")
+        .defaultValue(true).visible(criticalEnabled::get).build());
 
     // ---- runtime state ----
     private final ConcurrentLinkedQueue<Observation> observations = new ConcurrentLinkedQueue<>();
@@ -786,6 +790,7 @@ public class AntiVanish extends Module {
             String where = proof.distance() >= 0 ? " (" + proof.distance() + "m away)" : "";
             warning("CRITICAL: %s is watching you%s", name, where);
         }
+        if (titleAlert.get()) WatchAlert.show(name, 0, true, false);
     }
 
     private void playPendingChime() {
