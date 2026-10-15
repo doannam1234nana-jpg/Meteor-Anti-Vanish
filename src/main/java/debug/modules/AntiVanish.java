@@ -37,7 +37,6 @@ import meteordevelopment.meteorclient.settings.StringListSetting;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.orbit.EventHandler;
 import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -51,7 +50,7 @@ import net.minecraft.network.packet.c2s.play.PlayerInteractItemC2SPacket;
 import net.minecraft.network.packet.c2s.play.RequestCommandCompletionsC2SPacket;
 import net.minecraft.network.packet.s2c.play.BundleS2CPacket;
 import net.minecraft.network.packet.s2c.play.CommandSuggestionsS2CPacket;
-import net.minecraft.network.packet.s2c.play.EntitySoundS2CPacket;
+import net.minecraft.network.packet.s2c.play.PlaySoundFromEntityS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityTrackerUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.ExplosionS2CPacket;
 import net.minecraft.network.packet.s2c.play.GameMessageS2CPacket;
@@ -286,7 +285,7 @@ public class AntiVanish extends Module {
                 for (UUID id : remove.profileIds()) observations.offer(Observation.tabRemove(id));
             }
         } else if (packet instanceof PlayerListS2CPacket info) {
-            if (info.getActionSet().contains(PlayerListS2CPacket.Action.UPDATE_LISTED)) {
+            if (info.getActions().contains(PlayerListS2CPacket.Action.UPDATE_LISTED)) {
                 if (tabWatch.get()) {
                     int unlisted = 0;
                     for (PlayerListS2CPacket.Entry entry : info.getEntries()) {
@@ -298,7 +297,7 @@ public class AntiVanish extends Module {
                         }
                     }
                 }
-            } else if (info.getActionSet().contains(PlayerListS2CPacket.Action.UPDATE_GAME_MODE)
+            } else if (info.getActions().contains(PlayerListS2CPacket.Action.UPDATE_GAME_MODE)
                 && spectatorWatch.get()) {
                 queueGamemodeUpdates(info);
             }
@@ -323,7 +322,7 @@ public class AntiVanish extends Module {
         } else if (packet instanceof ExplosionS2CPacket explosion) {
             Vec3d c = explosion.center();
             observations.offer(Observation.explosion(c));
-        } else if (packet instanceof EntitySoundS2CPacket sound) {
+        } else if (packet instanceof PlaySoundFromEntityS2CPacket sound) {
             if (soundDetection.get()) {
                 observations.offer(Observation.entitySound(sound.getEntityId(), soundId(sound.getSound())));
             }
@@ -358,7 +357,7 @@ public class AntiVanish extends Module {
     }
 
     private void queueGamemodeUpdates(PlayerListS2CPacket info) {
-        if (info.getActionSet().contains(PlayerListS2CPacket.Action.ADD_PLAYER)) return;
+        if (info.getActions().contains(PlayerListS2CPacket.Action.ADD_PLAYER)) return;
         for (PlayerListS2CPacket.Entry entry : info.getEntries()) {
             if (entry == null || entry.gameMode() == null || entry.profileId() == null) continue;
             observations.offer(Observation.gamemode(entry.profileId(), entry.gameMode().name()));
@@ -792,8 +791,8 @@ public class AntiVanish extends Module {
     private void playPendingChime() {
         if (!pendingChime) return;
         pendingChime = false;
-        if (!chime.get() || mc.getSoundManager() == null) return;
-        mc.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f));
+        if (!chime.get() || mc.player == null) return;
+        mc.player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
     }
 
     // ================= chat =================
