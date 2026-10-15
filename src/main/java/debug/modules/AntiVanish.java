@@ -167,7 +167,7 @@ public class AntiVanish extends Module {
     private String lastBrand;
 
     public AntiVanish() {
-        super(DebugAddon.CATEGORY, "anti-vanish", "Detects vanished staff (ported from Anubis).");
+        super(DebugAddon.CATEGORY, "anti-vanish-plus", "Detects vanished staff (ported from Anubis).");
     }
 
     @Override
