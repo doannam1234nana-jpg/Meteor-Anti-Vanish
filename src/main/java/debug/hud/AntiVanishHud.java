@@ -12,7 +12,7 @@ import meteordevelopment.meteorclient.utils.render.color.Color;
 /** HUD list of current Anti Vanish detections (ported from the Anubis HUD). */
 public class AntiVanishHud extends HudElement {
     public static final HudElementInfo<AntiVanishHud> INFO = new HudElementInfo<>(
-        DebugAddon.HUD_GROUP, "anti-vanish", "Shows players detected by Anti Vanish.", AntiVanishHud::new);
+        DebugAddon.HUD_GROUP, "anti-vanish-plus", "Shows players detected by Anti Vanish.", AntiVanishHud::new);
 
     private static final Color RED = new Color(255, 85, 85);
     private static final Color YELLOW = new Color(255, 200, 70);
